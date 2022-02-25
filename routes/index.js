@@ -7,11 +7,24 @@ var fs = require('fs'),
 var mysql = require('mysql2');
 const { exit } = require('process');
 require('dotenv').config();
+var { Client, RegistrationState, TokenProvider } = require('@pusher/push-notifications-web');
 
 const typeMapping = {
   regular: 0,
   vip: 2,
 };
+
+function initBeam() {
+  const beamsClient = new Client({
+    instanceId: '44c06b32-c84a-4ce7-a713-02866b8dc657',
+  });
+
+  beamsClient
+    .start()
+    .then(() => beamsClient.addDeviceInterest('hello'))
+    .then(() => console.log('Successfully registered and subscribed!'))
+    .catch(console.error);
+}
 
 function connectMySQL() {
   const connection = mysql.createConnection({
@@ -76,6 +89,8 @@ async function mintNFT(ticketType, req) {
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
+  initBeam();
+
   if (req.query.id) {
     const { id: ticketId } = req.query;
     const connection = connectMySQL();
