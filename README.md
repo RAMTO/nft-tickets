@@ -1,15 +1,17 @@
-# NFT Tickets System
+# 🎫 NFT Tickets System
 
-Project nees Node.js version 12.22.9
+Project requires `Node.js` version `12.22.9`
 
-## Installation
+## 🏗 Installation
 
 ```
 yarn
 ```
 
-## Run project
+## 🚀 Run project
 
 ```
 yarn start
 ```
+
+Open new tab on `http://localhost:3000/?id=<TICKET_ID>`
