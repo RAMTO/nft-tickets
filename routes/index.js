@@ -84,10 +84,13 @@ router.get('/', async function (req, res, next) {
 
     let ticketType = 0;
     let nftMinted = 0;
+    let ticketValid = 0;
 
     connection.query(query, async (err, results, fields) => {
       if (results.length > 0) {
         console.log('Ticket found');
+        ticketValid = 1;
+
         const { is_activated, is_verified, type, is_nft_minted } = results[0];
 
         console.log('is_nft_minted', is_nft_minted);
@@ -118,6 +121,7 @@ router.get('/', async function (req, res, next) {
       }
 
       console.log('nftMinted', nftMinted);
+      console.log('ticketValid', ticketValid);
 
       res.render('index', {
         title: 'Express',
@@ -126,7 +130,7 @@ router.get('/', async function (req, res, next) {
           id: ticketId,
           type: ticketType,
           nft_mint: nftMinted,
-          valid: 1,
+          valid: ticketValid,
         },
       });
     });

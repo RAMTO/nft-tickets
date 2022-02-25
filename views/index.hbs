@@ -13,58 +13,59 @@
 
   <body>
 
-    {{#if ticket.valid}}
-      <div class='container'>
-        <div class='row'>
-          <div class='col-xs-12 col-sm-8 col-sm-push-2'>
-            <h1 class='text-center'>Crypto Revolution - Крипто Революция NFT</h1>
-            <hr />
-            <br />
-          </div>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-xs-12 col-sm-8 col-sm-push-2'>
+          <h1 class='text-center'>Crypto Revolution - Крипто Революция NFT</h1>
+          <hr />
+          <br />
         </div>
+      </div>
 
-        <div id='Minter' class='row'>
-          <div class='col-sm-6 col-md-4 col-lg-3'>
-            <div class='panel panel-default'>
-              <div class='panel-heading'>
-                <h3 class='panel-title'>Mint your NFT</h3>
-              </div>
-              <div class='panel-body'>
+      <div id='Minter' class='row'>
+        <div class='col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4'>
+          <div class='panel panel-default'>
+            <div class='panel-heading'>
+              <h3 class='panel-title'>Mint your NFT</h3>
+            </div>
+            <div class='panel-body'>
+              {{#if ticket.valid}}
                 {{#if ticket.nft_mint}}
                   <p class='alert alert-warning'>Already minted NFT</p>
                 {{else}}
-                  <a class='btn btn-primary' href='?id={{ticket.id}}&nft_done=1'>Mint</a>
+                  <div class='text-center'>
+                    <a class='btn btn-primary' href='?id={{ticket.id}}&nft_done=1'>Mint</a>
+                  </div>
                 {{/if}}
-              </div>
+              {{else}}
+                <p class='alert alert-danger'>Invalid ticket</p>
+              {{/if}}
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div id='NFTTemplate' style='display: none;'>
-        <div class='col-sm-6 col-md-4 col-lg-3 single_container'>
-          <div class='panel panel-default panel-pet'>
-            <div class='panel-heading'>
-              <h3 class='panel-title'>My NFT</h3>
-            </div>
-            <div class='panel-body panel-body-nft'>
-              <!--<img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true"> -->
-              <br /><br />
-              <strong>Token Owner</strong>:
-              <span class='token-owner'></span><br /><br />
-              <strong>Token Id</strong>:
-              <span class='token-id'>Warren, MI</span><br /><br />
-              <strong>Token URL</strong>:
-              <span class='token-url'></span><br /><br />
-              <img src='' id='token-img' class='token-img' />
-            </div>
+    <div id='NFTTemplate' style='display: none;'>
+      <div class='col-sm-6 col-md-4 col-lg-3 single_container'>
+        <div class='panel panel-default panel-pet'>
+          <div class='panel-heading'>
+            <h3 class='panel-title'>My NFT</h3>
+          </div>
+          <div class='panel-body panel-body-nft'>
+            <!--<img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true"> -->
+            <br /><br />
+            <strong>Token Owner</strong>:
+            <span class='token-owner'></span><br /><br />
+            <strong>Token Id</strong>:
+            <span class='token-id'>Warren, MI</span><br /><br />
+            <strong>Token URL</strong>:
+            <span class='token-url'></span><br /><br />
+            <img src='' id='token-img' class='token-img' />
           </div>
         </div>
       </div>
-
-    {{else}}
-      invalid ticket
-    {{/if}}
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
