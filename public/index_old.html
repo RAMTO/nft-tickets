@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Crypto Revolution - Крипто Революция NFT</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Crypto Revolution - Крипто Революция NFT</h1>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+
+      <div id="Minter" class="row">
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Minter</h3>
+            </div>
+            <div class="panel-body">
+              <br/><br/>
+              <label for="TokenLevel">Token id</label>
+              <input type="number" id="level" name="tokenLevel" min="0" max="7" value="0"><br/><br/>
+              <input type="text" id="toAddress" name="toAddress" value="0x6ad266b95101f826B3Edc63F4115f91DE1d2223D"><br/><br/>
+              <input type="text" id="passphrase" name="passphrase" value="XqpxTFzBuOCLZTDKFeGZ"><br/><br/>
+
+              <button class="btn btn-default btn-mint" type="button">Mint</button>
+              <button class="btn btn-default btn-convert" type="button">Convert NFTs</button>
+              <button class="btn btn-default btn-show-nfts" type="button">Show NFTs</button>
+              <button class="btn btn-default btn-transfer" type="button">Transfer NFT</button>
+            </div>
+        </div>
+      </div>
+
+      <div id="NFTsRow" class="row" style="word-wrap: break-word;">
+        <!-- NFTs LOAD HERE -->
+      </div>
+    </div>
+
+    <div id="NFTTemplate" style="display: none;">
+      <div class="col-sm-6 col-md-4 col-lg-3 single_container">
+        <div class="panel panel-default panel-pet">
+          <div class="panel-heading">
+            <h3 class="panel-title">My NFT</h3>
+          </div>
+          <div class="panel-body panel-body-nft">
+            <!--<img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true"> -->
+            <br/><br/>
+            <strong>Token Owner</strong>: <span class="token-owner"></span><br/><br/>
+            <strong>Token Id</strong>: <span class="token-id">Warren, MI</span><br/><br/>
+            <strong>Token URL</strong>: <span class="token-url"></span><br/><br/>
+            <img src="" id="token-img" class="token-img">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.ethers.io/lib/ethers-5.1.umd.min.js" type="text/javascript"></script>
+  
+    <script src="js/bootstrap.min.js"></script>
+    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
