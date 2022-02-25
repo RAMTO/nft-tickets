@@ -5,7 +5,13 @@ var ethers = require('ethers');
 var fs = require('fs'),
   json;
 var mysql = require('mysql2');
+const { exit } = require('process');
 require('dotenv').config();
+
+const typeMapping = {
+  regular: 0,
+  vip: 2,
+};
 
 function connectMySQL() {
   const connection = mysql.createConnection({
@@ -47,18 +53,17 @@ async function getContract(_providerUrl, _privateKey, _contractAddress) {
   return contract;
 }
 
-async function mintNFT(ticket, req) {
+async function mintNFT(ticketType, req) {
   const contract = await getContract(
     process.env.POLYGON_RPC_URL,
     process.env.WALLET_PRIVATE_KEY,
     process.env.CONTRACT_ADDRESS,
   );
 
-  const { type, id } = ticket;
   const { bcadr: addressTo } = req.cookies;
 
-  console.log(`Will mint to ${addressTo} with ${type}`);
-  const tx = await contract.mintNFT(addressTo, type, {
+  console.log(`Will mint to ${addressTo} with ${ticketType}`);
+  const tx = await contract.mintNFT(addressTo, ticketType, {
     gasPrice: 600000000000,
   });
   console.log('Minting...');
@@ -72,49 +77,58 @@ async function mintNFT(ticket, req) {
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   if (req.query.id) {
-    var ticket = { id: '', type: '', nft_mint: 0, valid: 0 };
+    const { id: ticketId } = req.query;
     const connection = connectMySQL();
 
-    connection.query(
-      'SELECT * FROM tickets',
-      // 'SELECT * FROM tickets AS t WHERE t.uuid = your_ticket_uuid',
-      function (err, results, fields) {
-        console.log(results); // results contains rows returned by server
-        console.log(fields); // fields contains extra meta data about results, if available
-      },
-    );
+    const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${req.query.id}'`;
 
-    json_data = readJsonFileSync('ids');
+    let ticketType = 0;
+    let nftMinted = 0;
 
-    for (var i = 0; i < json_data.length; ++i) {
-      if (json_data[i].id == req.query.id) {
-        ticket = json_data[i];
-      }
-    }
+    connection.query(query, async (err, results, fields) => {
+      if (results.length > 0) {
+        console.log('Ticket found');
+        const { is_activated, is_verified, type, is_nft_minted } = results[0];
 
-    if (req.query.nft_done && req.query.id) {
-      for (var i = 0; i < json_data.length; ++i) {
-        if (json_data[i].id == req.query.id) {
-          json_data[i].nft_mint = 0;
+        console.log('is_nft_minted', is_nft_minted);
 
-          var jsonPath = path.join(__dirname, '..', 'data', 'ids.json');
+        ticketType = typeMapping[type];
+        nftMinted = is_nft_minted;
 
-          const response = await mintNFT(ticket, req);
+        if (req.query.nft_done && req.query.id) {
+          if (is_nft_minted == 0) {
+            const response = await mintNFT(ticketType, req);
 
-          if (response) {
-            fs.writeFileSync(jsonPath, JSON.stringify(json_data, null, 4));
-            console.log('JSON updated!');
+            if (response) {
+              let updateQuery = `UPDATE tickets SET is_nft_minted = 1 WHERE uuid = '${ticketId}'`;
+              connection.query(updateQuery, async (err, results, fields) => {
+                console.log('results', results);
+                res.redirect('/?id=' + req.query.id);
+                exit;
+              });
+            } else {
+              console.log('Problem with minting');
+            }
+          } else {
+            console.log('NTF is allready minted');
           }
-
-          res.redirect('/?id=' + req.query.id);
         }
+      } else {
+        console.log('Invalid ticket id');
       }
-    }
 
-    res.render('index', {
-      title: 'Express',
-      id: parseInt(req.query.id),
-      ticket: ticket,
+      console.log('nftMinted', nftMinted);
+
+      res.render('index', {
+        title: 'Express',
+        id: parseInt(req.query.id),
+        ticket: {
+          id: ticketId,
+          type: ticketType,
+          nft_mint: nftMinted,
+          valid: 1,
+        },
+      });
     });
   }
 });
