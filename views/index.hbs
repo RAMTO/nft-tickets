@@ -14,6 +14,12 @@
           <h3 class='panel-title'>Mint your NFT</h3>
         </div>
         <div class='panel-body'>
+          <div class='js-wallet-container'>
+            <p class=''>Wallet address: <span class='js-container-address'></span></p>
+          </div>
+          <div class='js-warning-container' style='display: none'>
+            <p>Please connect your wallet</p>
+          </div>
           {{#if ticket.valid}}
             {{#if ticket.nft_mint}}
               <p class='alert alert-warning'>Already minted NFT</p>
