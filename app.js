@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-var async = require('async');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
