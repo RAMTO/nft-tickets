@@ -70,10 +70,10 @@ App = {
     event.preventDefault();
     const $this = $(this);
     const id = $this.data('id');
-    $this.addClass('disabled');
-    $this.text('Minting...');
+    $this.hide();
+    $('.js-container-loading').removeClass('d-none').addClass('d-flex');
     $.post('/mint', { id }).done(function () {
-      $this.hide();
+      $('.js-container-loading').removeClass('d-flex').addClass('d-none');
       $('.js-container-success').show();
     });
   },

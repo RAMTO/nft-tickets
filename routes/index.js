@@ -85,18 +85,20 @@ router.get('/', async function (req, res, next) {
     let ticketType = 0;
     let nftMinted = 0;
     let ticketValid = 0;
+    let ticketWhitelisted = 0;
 
     connection.query(query, async (err, results, fields) => {
       if (results.length > 0) {
         console.log('Ticket found');
         ticketValid = 1;
 
-        const { is_activated, is_verified, type, is_nft_minted } = results[0];
+        const { is_whitelisted, type, is_nft_minted } = results[0];
 
         console.log('is_nft_minted', is_nft_minted);
 
         ticketType = typeMapping[type];
         nftMinted = is_nft_minted;
+        ticketWhitelisted = is_whitelisted;
       } else {
         console.log('Invalid ticket id');
       }
@@ -112,6 +114,7 @@ router.get('/', async function (req, res, next) {
           type: ticketType,
           nft_mint: nftMinted,
           valid: ticketValid,
+          whitelisted: ticketWhitelisted,
         },
       });
     });

@@ -1,17 +1,20 @@
 <div class='container'>
-      <h1 class='text-center'>Crypto Revolution - Крипто Революция NFT</h1>
-      <hr />
-  </div>
+  <h1 class='text-center'>Crypto Revolution - Крипто Революция NFT</h1>
+  <hr />
 
-  <div id='Minter' class='row' style="padding: 24px;">
-    <div class='col-md-offset-3 col-md-6'>
-      <div class='panel panel-default'>
+  {{ticket.isMinting}}
+
+  <div id='Minter' class='row p-3'>
+    <div class='offset-md-3 col-md-6'>
+      <div class='card p-3'>
         <div class='panel-heading'>
           <h3 class='panel-title'>Mint your NFT</h3>
         </div>
+        <hr />
         <div class='panel-body'>
-          <div class='js-wallet-container' style="margin-bottom: 16px;">
-            <p class=''>Wallet address: <code class='js-container-address'></code></p>
+          <div class='js-wallet-container' style='margin-bottom: 16px;'>
+            <p><span class='fw-bold'>Wallet address:</span>
+              <code class='js-container-address'></code></p>
           </div>
           <div class='js-warning-container' style='display: none'>
             <p>Please connect your wallet</p>
@@ -22,6 +25,12 @@
             {{else}}
               <div class='text-center'>
                 <a class='btn btn-primary btn-mint' data-id='{{ticket.id}}' href='#'>Mint</a>
+                <div class='d-none justify-content-center align-items-center js-container-loading'>
+                  <div class='spinner-border text-primary' role='status'>
+                    <span class='visually-hidden'>Loading...</span>
+                  </div>
+                  <p class='ms-2 mb-0'>Minting...</p>
+                </div>
                 <p
                   style='display: none;'
                   class='alert alert-success js-container-success'
