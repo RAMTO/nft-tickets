@@ -115,6 +115,7 @@ router.get('/', async function (req, res, next) {
           nft_mint: nftMinted,
           valid: ticketValid,
           whitelisted: ticketWhitelisted,
+          isMinting: Number(process.env.IS_MINTING),
         },
       });
     });

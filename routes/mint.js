@@ -79,7 +79,9 @@ router.post('/', async function (req, res, next) {
   if (req.body.id) {
     const { id: ticketId } = req.body;
     const connection = connectMySQL();
+
     const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${ticketId}'`;
+
     let ticketType = 0;
     let nftMinted = 0;
     let ticketValid = 0;
@@ -88,6 +90,7 @@ router.post('/', async function (req, res, next) {
       if (results.length > 0) {
         console.log('Ticket found');
         ticketValid = 1;
+
         const { is_activated, is_verified, type, is_nft_minted } = results[0];
         console.log('is_nft_minted', is_nft_minted);
         ticketType = typeMapping[type];
@@ -95,7 +98,9 @@ router.post('/', async function (req, res, next) {
 
         if (is_nft_minted == 0) {
           try {
+            process.env.IS_MINTING = 1;
             const response = await mintNFT(ticketType, req);
+            process.env.IS_MINTING = 0;
             if (response) {
               let updateQuery = `UPDATE tickets SET is_nft_minted = 1 WHERE uuid = '${ticketId}'`;
               connection.query(updateQuery, async (err, results, fields) => {
