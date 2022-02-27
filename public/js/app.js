@@ -66,7 +66,17 @@ App = {
     $(document).on('click', '.btn-transfer', App.TransferNFT);
   },
 
-  handleMint: async function (event) {},
+  handleMint: async function (event) {
+    event.preventDefault();
+    const $this = $(this);
+    const id = $this.data('id');
+    $this.addClass('disabled');
+    $this.text('Minting...');
+    $.post('/mint', { id }).done(function () {
+      $this.hide();
+      $('.js-container-success').show();
+    });
+  },
 
   ShowNFTs: async function () {
     console.log('Show NFTs!');

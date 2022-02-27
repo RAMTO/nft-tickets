@@ -1,21 +1,17 @@
 <div class='container'>
-  <div class='row'>
-    <div class='col-xs-12 col-sm-8 col-sm-push-2'>
       <h1 class='text-center'>Crypto Revolution - Крипто Революция NFT</h1>
       <hr />
-      <br />
-    </div>
   </div>
 
-  <div id='Minter' class='row'>
-    <div class='col-sm-offset-3 col-sm-6'>
+  <div id='Minter' class='row' style="padding: 24px;">
+    <div class='col-md-offset-3 col-md-6'>
       <div class='panel panel-default'>
         <div class='panel-heading'>
           <h3 class='panel-title'>Mint your NFT</h3>
         </div>
         <div class='panel-body'>
-          <div class='js-wallet-container'>
-            <p class=''>Wallet address: <span class='js-container-address'></span></p>
+          <div class='js-wallet-container' style="margin-bottom: 16px;">
+            <p class=''>Wallet address: <code class='js-container-address'></code></p>
           </div>
           <div class='js-warning-container' style='display: none'>
             <p>Please connect your wallet</p>
@@ -25,7 +21,11 @@
               <p class='alert alert-warning'>Already minted NFT</p>
             {{else}}
               <div class='text-center'>
-                <a class='btn btn-primary' href='?id={{ticket.id}}&nft_done=1'>Mint</a>
+                <a class='btn btn-primary btn-mint' data-id='{{ticket.id}}' href='#'>Mint</a>
+                <p
+                  style='display: none;'
+                  class='alert alert-success js-container-success'
+                >Successfully minted!</p>
               </div>
             {{/if}}
           {{else}}

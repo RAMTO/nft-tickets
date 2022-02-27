@@ -75,13 +75,11 @@ async function mintNFT(ticketType, req) {
 }
 
 /* GET home page. */
-router.get('/', async function (req, res, next) {
-  if (req.query.id) {
-    const { id: ticketId } = req.query;
+router.post('/', async function (req, res, next) {
+  if (req.body.id) {
+    const { id: ticketId } = req.body;
     const connection = connectMySQL();
-
-    const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${req.query.id}'`;
-
+    const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${ticketId}'`;
     let ticketType = 0;
     let nftMinted = 0;
     let ticketValid = 0;
@@ -90,30 +88,35 @@ router.get('/', async function (req, res, next) {
       if (results.length > 0) {
         console.log('Ticket found');
         ticketValid = 1;
-
         const { is_activated, is_verified, type, is_nft_minted } = results[0];
-
         console.log('is_nft_minted', is_nft_minted);
-
         ticketType = typeMapping[type];
         nftMinted = is_nft_minted;
+
+        if (is_nft_minted == 0) {
+          try {
+            const response = await mintNFT(ticketType, req);
+            if (response) {
+              let updateQuery = `UPDATE tickets SET is_nft_minted = 1 WHERE uuid = '${ticketId}'`;
+              connection.query(updateQuery, async (err, results, fields) => {
+                console.log('results', results);
+                res.json({ status: 1 });
+              });
+            } else {
+              console.log('Problem with minting');
+            }
+          } catch (e) {
+            console.log('Error in minting');
+            res.json({ status: 2 });
+          }
+        } else {
+          console.log('NTF is allready minted');
+        }
       } else {
         console.log('Invalid ticket id');
       }
-
       console.log('nftMinted', nftMinted);
       console.log('ticketValid', ticketValid);
-
-      res.render('index', {
-        title: 'Express',
-        id: parseInt(req.query.id),
-        ticket: {
-          id: ticketId,
-          type: ticketType,
-          nft_mint: nftMinted,
-          valid: ticketValid,
-        },
-      });
     });
   }
 });
