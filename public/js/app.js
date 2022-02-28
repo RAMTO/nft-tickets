@@ -112,9 +112,15 @@ App = {
   },
 
   showNFT: function (event) {
-    event.preventDefault();
+    // event.preventDefault();
     const $this = $(this);
     const address = $this.data('address');
+
+    $this.hide();
+
+    $('.js-container-loading').removeClass('d-none').addClass('d-flex');
+    $('.js-container-success').hide();
+    $('.js-container-failure').hide();
 
     $.post('/nft', { address })
       .done(function (response) {
@@ -142,7 +148,9 @@ App = {
       .fail(function () {
         alert('error');
       })
-      .always(function () {});
+      .always(function () {
+        $('.js-container-loading').removeClass('d-flex').addClass('d-none');
+      });
   },
 
   getOwnerNFTs: async function (owner) {

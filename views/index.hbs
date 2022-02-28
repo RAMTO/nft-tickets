@@ -28,7 +28,7 @@
                 <p
                   style='display: none;'
                   class='alert alert-success js-container-success'
-                >Successfully minted!</p>
+                >Successfully minted! Please refresh the page to see your NFT!</p>
                 <p style='display: none;' class='alert alert-danger js-container-failure'>Problem
                   with mint, try again!</p>
                 {{#if ticket.isMinting}}
@@ -36,15 +36,14 @@
                 {{else}}
                   <a class='btn btn-primary btn-mint' data-id='{{ticket.id}}' href='#'>Mint</a>
                 {{/if}}
-                <div class='d-none justify-content-center align-items-center js-container-loading'>
-                  <div class='spinner-border text-primary' role='status'>
-                    <span class='visually-hidden'>Loading...</span>
-                  </div>
-                  <p class='ms-2 mb-0'>Minting...</p>
-                </div>
-
               </div>
             {{/if}}
+            <div class='d-none justify-content-center align-items-center js-container-loading'>
+              <div class='spinner-border text-primary' role='status'>
+                <span class='visually-hidden'>Loading...</span>
+              </div>
+              <p class='ms-2 mb-0'>Loading...</p>
+            </div>
           {{else}}
             <p class='alert alert-danger'>Invalid ticket</p>
           {{/if}}
@@ -54,16 +53,5 @@
   </div>
 
   <div class='row mt-4 js-container-cards'>
-    <div class='col-md-4 mb-4'>
-      <div class='card p-4'>
-        <p>
-          <span>Name:</span>
-          <span class='js-nft-title'></span>
-        </p>
-        <div>
-          <img class='js-nft-image' src='' alt='' />
-        </div>
-      </div>
-    </div>
   </div>
 </div>
