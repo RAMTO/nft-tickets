@@ -62,16 +62,19 @@ async function mintNFT(ticketType, req) {
 
   const { bcadr: addressTo } = req.cookies;
 
-  console.log(`Will mint to ${addressTo} with ${ticketType}`);
-  const tx = await contract.mintNFT(addressTo, ticketType, {
-    gasPrice: 600000000000,
-  });
-  console.log('Minting...');
-  await tx.wait();
-  console.log('Minted!');
-  console.log('TX', tx);
+  try {
+    const tx = await contract.mintNFT(addressTo, ticketType, {
+      gasPrice: 600000000000,
+    });
 
-  return true;
+    console.log('Minting...');
+    await tx.wait();
+    console.log('Minted!');
+
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 /* GET home page. */
@@ -82,25 +85,17 @@ router.post('/', async function (req, res, next) {
 
     const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${ticketId}'`;
 
-    let ticketType = 0;
-    let nftMinted = 0;
-    let ticketValid = 0;
-
     connection.query(query, async (err, results, fields) => {
       if (results.length > 0) {
-        console.log('Ticket found');
-        ticketValid = 1;
-
-        const { is_activated, is_verified, type, is_nft_minted } = results[0];
-        console.log('is_nft_minted', is_nft_minted);
+        const { type, is_nft_minted } = results[0];
         ticketType = typeMapping[type];
-        nftMinted = is_nft_minted;
 
         if (is_nft_minted == 0) {
           try {
             process.env.IS_MINTING = 1;
             const response = await mintNFT(ticketType, req);
             process.env.IS_MINTING = 0;
+
             if (response) {
               let updateQuery = `UPDATE tickets SET is_nft_minted = 1 WHERE uuid = '${ticketId}'`;
               connection.query(updateQuery, async (err, results, fields) => {
@@ -109,6 +104,7 @@ router.post('/', async function (req, res, next) {
               });
             } else {
               console.log('Problem with minting');
+              res.json({ status: 2 });
             }
           } catch (e) {
             console.log('Error in minting');
@@ -116,12 +112,12 @@ router.post('/', async function (req, res, next) {
           }
         } else {
           console.log('NTF is allready minted');
+          res.json({ status: 2 });
         }
       } else {
         console.log('Invalid ticket id');
+        res.json({ status: 2 });
       }
-      console.log('nftMinted', nftMinted);
-      console.log('ticketValid', ticketValid);
     });
   }
 });

@@ -71,11 +71,19 @@ App = {
     const $this = $(this);
     const id = $this.data('id');
     $this.hide();
+
     $('.js-container-loading').removeClass('d-none').addClass('d-flex');
-    $.post('/mint', { id }).done(function () {
-      $('.js-container-loading').removeClass('d-flex').addClass('d-none');
-      $('.js-container-success').show();
-    });
+
+    $.post('/mint', { id })
+      .done(function () {
+        $('.js-container-success').show();
+      })
+      .fail(function () {
+        alert('error');
+      })
+      .always(function () {
+        $('.js-container-loading').removeClass('d-flex').addClass('d-none');
+      });
   },
 
   ShowNFTs: async function () {
