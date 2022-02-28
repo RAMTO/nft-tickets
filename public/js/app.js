@@ -73,10 +73,21 @@ App = {
     $this.hide();
 
     $('.js-container-loading').removeClass('d-none').addClass('d-flex');
+    $('.js-container-success').hide();
+    $('.js-container-failure').hide();
 
     $.post('/mint', { id })
-      .done(function () {
-        $('.js-container-success').show();
+      .done(function (response) {
+        const { status } = response;
+
+        if (status === 1) {
+          $('.js-container-success').show();
+          $('.js-container-failure').hide();
+        } else {
+          $('.js-container-failure').show();
+          $('.js-container-success').hide();
+          $this.show();
+        }
       })
       .fail(function () {
         alert('error');

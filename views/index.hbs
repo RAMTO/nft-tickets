@@ -22,6 +22,12 @@
               <p class='alert alert-warning'>Already minted NFT</p>
             {{else}}
               <div class='text-center'>
+                <p
+                  style='display: none;'
+                  class='alert alert-success js-container-success'
+                >Successfully minted!</p>
+                <p style='display: none;' class='alert alert-danger js-container-failure'>Problem
+                  with mint, try again!</p>
                 {{#if ticket.isMinting}}
                   <p class='alert alert-warning'>Please try in a couple of minutes</p>
                 {{else}}
@@ -33,10 +39,7 @@
                   </div>
                   <p class='ms-2 mb-0'>Minting...</p>
                 </div>
-                <p
-                  style='display: none;'
-                  class='alert alert-success js-container-success'
-                >Successfully minted!</p>
+
               </div>
             {{/if}}
           {{else}}
