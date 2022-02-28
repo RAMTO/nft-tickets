@@ -87,26 +87,24 @@ App = {
         if (status === 1) {
           $('.js-container-success').show();
           $('.js-container-failure').hide();
+          $('.js-container-loading').removeClass('d-flex').addClass('d-none');
 
           App.showNFT(App.account);
         } else {
+          $('.js-container-loading').removeClass('d-flex').addClass('d-none');
           $('.js-container-failure').show();
           $('.js-container-success').hide();
           $this.show();
         }
       })
       .fail(function () {
-        alert('error');
-      })
-      .always(function () {
         $('.js-container-loading').removeClass('d-flex').addClass('d-none');
+        alert('error');
       });
   },
 
   showNFT: function (address) {
     $('.js-container-loading').removeClass('d-none').addClass('d-flex');
-    $('.js-container-success').hide();
-    $('.js-container-failure').hide();
 
     $.post('/nft', { address })
       .done(function (response) {

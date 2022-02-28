@@ -11,6 +11,8 @@ require('dotenv').config();
 const typeMapping = {
   regular: 0,
   vip: 2,
+  media: 4,
+  speaker: 6,
 };
 
 function connectMySQL() {
