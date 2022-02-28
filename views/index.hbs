@@ -19,16 +19,13 @@
           </div>
           {{#if ticket.valid}}
             {{#if ticket.nft_mint}}
-              <p class='alert alert-warning'>Already minted NFT</p>
-              <p>
-                <a href='#' class='btn btn-primary js-show-nft'>Show my NFT</a>
-              </p>
+              <p class='alert alert-warning'>Already minted NFT with this ticket</p>
             {{else}}
               <div class='text-center'>
                 <p
                   style='display: none;'
                   class='alert alert-success js-container-success'
-                >Successfully minted! Please refresh the page to see your NFT!</p>
+                >Successfully minted!</p>
                 <p style='display: none;' class='alert alert-danger js-container-failure'>Problem
                   with mint, try again!</p>
                 {{#if ticket.isMinting}}

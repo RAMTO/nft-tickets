@@ -22,6 +22,12 @@ App = {
         console.log('Account set to ' + App.account);
         $('.js-container-address').text(App.account);
         $('.js-show-nft').data('address', App.account);
+
+        const mintBtn = $('.btn-mint');
+
+        if (mintBtn.length === 0) {
+          this.showNFT(App.account);
+        }
       } catch (error) {
         // User denied account access...
         console.error('User denied account access');
@@ -62,7 +68,6 @@ App = {
 
   bindEvents: function () {
     $(document).on('click', '.btn-mint', App.handleMint);
-    $(document).on('click', '.js-show-nft', App.showNFT);
   },
 
   handleMint: async function (event) {
@@ -82,6 +87,8 @@ App = {
         if (status === 1) {
           $('.js-container-success').show();
           $('.js-container-failure').hide();
+
+          App.showNFT(App.account);
         } else {
           $('.js-container-failure').show();
           $('.js-container-success').hide();
@@ -96,28 +103,7 @@ App = {
       });
   },
 
-  ShowNFTs: async function () {
-    console.log('Show NFTs!');
-
-    App.contracts.CryptoRevolution.methods.getNFTOwners().call((error, result) => {
-      if (!error) {
-        console.log(result);
-        for (i = 0; i < result.length; i++) {
-          // App.getOwnerNFTs(result[i]);
-        }
-      } else {
-        console.log(error);
-      }
-    });
-  },
-
-  showNFT: function (event) {
-    // event.preventDefault();
-    const $this = $(this);
-    const address = $this.data('address');
-
-    $this.hide();
-
+  showNFT: function (address) {
     $('.js-container-loading').removeClass('d-none').addClass('d-flex');
     $('.js-container-success').hide();
     $('.js-container-failure').hide();
@@ -153,72 +139,6 @@ App = {
       });
   },
 
-  getOwnerNFTs: async function (owner) {
-    console.log('getOwnerNFTs!');
-    var ownerNFTs = await App.contracts.CryptoRevolution.methods.getOwnerNFTs(owner).call();
-    console.log('ownerNFTs', ownerNFTs);
-    const URI = await App.GetNFTURI(0);
-
-    var NFTsRow = $('#NFTsRow');
-    NFTsRow.empty();
-
-    for (i = 0; i < ownerNFTs.length; i++) {
-      let uri_per_id = URI;
-      uri_per_id = uri_per_id.replace('{id}', ownerNFTs[i]);
-
-      var NFTTemplate = $('#NFTTemplate');
-      NFTTemplate.find('.token-owner').text(owner);
-      NFTTemplate.find('.token-id').text(ownerNFTs[i]);
-      NFTTemplate.find('.token-url').text(uri_per_id);
-      NFTsRow.append(NFTTemplate.html());
-    }
-
-    App.GetImgFromMeta();
-  },
-
-  GetNFTURI: async function (nft_id) {
-    return await App.contracts.CryptoRevolution.methods.uri(nft_id).call();
-  },
-
-  GetImgFromMeta: async function () {
-    var ids = [];
-    // Find all ids
-    var token_div = $('.single_container');
-    for (i = 0; i < token_div.length; i++) {
-      var token = $(token_div[i]).find('.token-id');
-      if ($(token).text() != '' && !ids.includes($(token).text())) {
-        ids.push($(token).text());
-      }
-    }
-
-    // Query URIs for ids
-    const URI = await App.GetNFTURI(0);
-    URLs = {};
-    for (i = 0; i < ids.length; i++) {
-      let uri_per_id = URI;
-      uri_per_id = uri_per_id.replace('{id}', ids[i]);
-      URLs[ids[i]] = uri_per_id;
-    }
-
-    // Query the jsons of all ids
-    var dict = {};
-    for (const [key, value] of Object.entries(URLs)) {
-      var data = await await $.getJSON(value);
-      dict[key] = data['image'];
-    }
-
-    // Walk through all added items and add the image
-    var bodies = $('.panel-body-nft');
-    for (i = 0; i < bodies.length; i++) {
-      var local_token_id_div = $(bodies[i]).find('.token-id');
-      if ($(local_token_id_div).text() != '') {
-        var token_id = parseInt(local_token_id_div.text());
-        var img_el = $(bodies[i]).children('img');
-        $(img_el).attr('src', dict[token_id]);
-      }
-    }
-  },
-
   ConvertNFT: async function () {
     console.log('Convert!');
 
@@ -234,7 +154,7 @@ App = {
       .on('transactionHash', function (hash) {})
       .on('receipt', function (receipt) {})
       .on('confirmation', function (confirmationNumber, receipt) {
-        App.ShowNFTs();
+        App.ShowNFT(App.account);
       })
       .on('error', console.error);
   },
