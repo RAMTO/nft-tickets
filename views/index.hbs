@@ -20,6 +20,9 @@
           {{#if ticket.valid}}
             {{#if ticket.nft_mint}}
               <p class='alert alert-warning'>Already minted NFT</p>
+              <p>
+                <a href='#' class='btn btn-primary js-show-nft'>Show my NFT</a>
+              </p>
             {{else}}
               <div class='text-center'>
                 <p
@@ -49,24 +52,17 @@
       </div>
     </div>
   </div>
-</div>
 
-<div id='NFTTemplate' style='display: none;'>
-  <div class='col-sm-6 col-md-4 col-lg-3 single_container'>
-    <div class='panel panel-default panel-pet'>
-      <div class='panel-heading'>
-        <h3 class='panel-title'>My NFT</h3>
-      </div>
-      <div class='panel-body panel-body-nft'>
-        <!--<img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true"> -->
-        <br /><br />
-        <strong>Token Owner</strong>:
-        <span class='token-owner'></span><br /><br />
-        <strong>Token Id</strong>:
-        <span class='token-id'>Warren, MI</span><br /><br />
-        <strong>Token URL</strong>:
-        <span class='token-url'></span><br /><br />
-        <img src='' id='token-img' class='token-img' />
+  <div class='row mt-4 js-container-cards'>
+    <div class='col-md-4 mb-4'>
+      <div class='card p-4'>
+        <p>
+          <span>Name:</span>
+          <span class='js-nft-title'></span>
+        </p>
+        <div>
+          <img class='js-nft-image' src='' alt='' />
+        </div>
       </div>
     </div>
   </div>

@@ -21,6 +21,7 @@ App = {
         document.cookie = 'bcadr=' + App.account;
         console.log('Account set to ' + App.account);
         $('.js-container-address').text(App.account);
+        $('.js-show-nft').data('address', App.account);
       } catch (error) {
         // User denied account access...
         console.error('User denied account access');
@@ -61,9 +62,7 @@ App = {
 
   bindEvents: function () {
     $(document).on('click', '.btn-mint', App.handleMint);
-    $(document).on('click', '.btn-show-nfts', App.ShowNFTs);
-    $(document).on('click', '.btn-convert', App.ConvertNFT);
-    $(document).on('click', '.btn-transfer', App.TransferNFT);
+    $(document).on('click', '.js-show-nft', App.showNFT);
   },
 
   handleMint: async function (event) {
@@ -102,9 +101,9 @@ App = {
 
     App.contracts.CryptoRevolution.methods.getNFTOwners().call((error, result) => {
       if (!error) {
-        //console.log(result);
+        console.log(result);
         for (i = 0; i < result.length; i++) {
-          App.getOwnerNFTs(result[i]);
+          // App.getOwnerNFTs(result[i]);
         }
       } else {
         console.log(error);
@@ -112,9 +111,44 @@ App = {
     });
   },
 
+  showNFT: function (event) {
+    event.preventDefault();
+    const $this = $(this);
+    const address = $this.data('address');
+
+    $.post('/nft', { address })
+      .done(function (response) {
+        const { status, nfts } = response;
+        if (status === 1) {
+          const templateItems = nfts.map(nft => {
+            return `
+             <div class='col-md-4 mb-4'>
+              <div class="card">
+                <img src="${nft.image}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">${nft.name}</h5>
+                  <p class="card-text">${nft.description}</p>
+                </div>
+              </div>
+            </div>
+            `;
+          });
+          const templateItemsSting = templateItems.join('');
+          $('.js-container-cards').html(templateItemsSting);
+        } else {
+          console.log('Problem');
+        }
+      })
+      .fail(function () {
+        alert('error');
+      })
+      .always(function () {});
+  },
+
   getOwnerNFTs: async function (owner) {
     console.log('getOwnerNFTs!');
     var ownerNFTs = await App.contracts.CryptoRevolution.methods.getOwnerNFTs(owner).call();
+    console.log('ownerNFTs', ownerNFTs);
     const URI = await App.GetNFTURI(0);
 
     var NFTsRow = $('#NFTsRow');
@@ -195,65 +229,6 @@ App = {
         App.ShowNFTs();
       })
       .on('error', console.error);
-  },
-
-  TransferNFT: async function () {
-    console.log('Mint!');
-
-    var nft_level = $('#level').val();
-    var nft_int = parseInt(nft_level);
-    var to_address_str = $('#toAddress').val();
-
-    var to_address;
-    try {
-      to_address = App.web3.utils.toChecksumAddress(to_address_str);
-    } catch (e) {
-      console.error('invalid ethereum address', e.message);
-    }
-
-    console.log('Transferring from: ' + App.account);
-    console.log('To: ' + to_address);
-    console.log('NFT level: ' + nft_int);
-
-    const gasAmount = await App.contracts.CryptoRevolution.methods
-      .safeTransferFrom(App.account, to_address, parseInt(nft_level), 1, '0x5174e853')
-      .estimateGas({ from: App.account, to: to_address });
-    //console.log("Mint gas - " + gasAmount);
-    await App.contracts.CryptoRevolution.methods
-      .safeTransferFrom(App.account, to_address, parseInt(nft_level), 1, '0x5174e853')
-      .send({ from: App.account, to: to_address, gas: gasAmount })
-      .on('transactionHash', function (hash) {})
-      .on('receipt', function (receipt) {})
-      .on('confirmation', function (confirmationNumber, receipt) {
-        App.ShowNFTs();
-      })
-      .on('error', console.error);
-  },
-
-  VerifyIssuerID: async function (id, nft_type) {
-    var ids_json;
-    await $.getJSON('./json/ids.json', function (json) {
-      ids_json = json;
-    });
-
-    console.log('Searching for id ' + id + ', of type ' + nft_type);
-    typeStr = '';
-
-    if (nft_type == 0) typeStr = 'Visitors';
-    if (nft_type == 2) typeStr = 'VIPs';
-    if (nft_type == 4) typeStr = 'Sponsors';
-    if (nft_type == 6) typeStr = 'Lecturers';
-
-    var match = false;
-    for (i in ids_json[typeStr]) {
-      if (ids_json[typeStr][i] == id) {
-        match = true;
-      }
-    }
-
-    if (match) return true;
-
-    return false;
   },
 };
 
