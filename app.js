@@ -57,21 +57,13 @@ app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
 
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler());
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/mint', mintRouter);
 app.use('/nft', nftRouter);
-
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
-
-// Optional fallthrough error handler
-app.use(function onError(err, req, res, next) {
-  // The error id is attached to `res.sentry` to be returned
-  // and optionally displayed to the user for support.
-  res.statusCode = 500;
-  res.end(res.sentry + "\n");
-});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -89,19 +81,12 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-const transaction = Sentry.startTransaction({
-  op: "test",
-  name: "My First Test Transaction",
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500;
+  res.end(res.sentry + "\n");
 });
-
-setTimeout(() => {
-  try {
-    foo();
-  } catch (e) {
-    Sentry.captureException(e);
-  } finally {
-    transaction.finish();
-  }
-}, 99);
 
 module.exports = app;
