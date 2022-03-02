@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 const { exit } = require('process');
+require('dotenv').config();
 
 var Sentry = require("@sentry/node");
 var Tracing = require("@sentry/tracing");
@@ -88,8 +89,19 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-app.get("/debug-sentry", function mainHandler(req, res) {
-  throw new Error("My first Sentry error!");
+const transaction = Sentry.startTransaction({
+  op: "test",
+  name: "My First Test Transaction",
 });
+
+setTimeout(() => {
+  try {
+    foo();
+  } catch (e) {
+    Sentry.captureException(e);
+  } finally {
+    transaction.finish();
+  }
+}, 99);
 
 module.exports = app;
