@@ -1,6 +1,6 @@
 App = {
   web3Provider: null,
-  contract_address: new String('0x04b33ca2CfBf0Fef61BC3b4492de2525bb08D2D5'),
+  contract_address: new String('0xe4c7823ecbac863d213907Ca11dfAAF15cC38b4B'),
   contracts: {},
   account: new String(''),
   web3,

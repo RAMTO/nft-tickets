@@ -10,9 +10,7 @@ require('dotenv').config();
 
 const typeMapping = {
   regular: 0,
-  vip: 2,
-  media: 4,
-  speaker: 6,
+  vip: 1,
 };
 
 function connectMySQL() {
@@ -90,11 +88,18 @@ router.post('/', async function (req, res, next) {
     connection.query(query, async (err, results, fields) => {
       if (results.length > 0) {
         const { type, is_nft_minted } = results[0];
-        ticketType = typeMapping[type];
+        console.log('type', type);
+        if (type === 'speaker') {
+          let { speaker_type } = results[0];
+          ticketType = speaker_type;
+        } else {
+          ticketType = typeMapping[type];
+        }
 
         if (is_nft_minted == 0) {
           try {
             process.env.IS_MINTING = 1;
+            console.log('ticketType', ticketType);
             const response = await mintNFT(ticketType, req);
             process.env.IS_MINTING = 0;
 

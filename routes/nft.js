@@ -34,30 +34,6 @@ async function getContract(_providerUrl, _privateKey, _contractAddress) {
   return contract;
 }
 
-async function mintNFT(ticketType, req) {
-  const contract = await getContract(
-    process.env.POLYGON_RPC_URL,
-    process.env.WALLET_PRIVATE_KEY,
-    process.env.CONTRACT_ADDRESS,
-  );
-
-  const { bcadr: addressTo } = req.cookies;
-
-  try {
-    const tx = await contract.mintNFT(addressTo, ticketType, {
-      gasPrice: 600000000000,
-    });
-
-    console.log('Minting...');
-    await tx.wait();
-    console.log('Minted!');
-
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 /* GET home page. */
 router.post('/', async function (req, res, next) {
   if (req.body.address) {
@@ -76,8 +52,14 @@ router.post('/', async function (req, res, next) {
       for (const id of ids) {
         const uri = await contract.uri(0);
         uriReplaced = uri.replace('{id}', id);
-        const json = await getJSON(uriReplaced);
-        nfts.push(json);
+        try {
+          console.log('Fetching json...');
+          console.log(uriReplaced);
+          const json = await getJSON(uriReplaced);
+          nfts.push(json);
+        } catch (e) {
+          console.error('Error fetching json', e);
+        }
       }
 
       if (nfts.length > 0) {
