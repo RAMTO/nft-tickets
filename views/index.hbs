@@ -31,7 +31,12 @@
                 {{#if ticket.isMinting}}
                   <p class='alert alert-warning'>Please try in a couple of minutes</p>
                 {{else}}
-                  <a class='btn btn-primary btn-mint' data-id='{{ticket.id}}' href='#'>Mint</a>
+                  <a
+                    style='display: none;'
+                    class='btn btn-primary btn-mint'
+                    data-id='{{ticket.id}}'
+                    href='#'
+                  >Mint</a>
                 {{/if}}
               </div>
             {{/if}}

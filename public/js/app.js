@@ -24,6 +24,7 @@ App = {
         $('.js-show-nft').data('address', App.account);
 
         const mintBtn = $('.btn-mint');
+        mintBtn.show();
 
         if (mintBtn.length === 0) {
           this.showNFT(App.account);
