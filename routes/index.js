@@ -4,7 +4,7 @@ var router = express.Router();
 var ethers = require('ethers');
 var fs = require('fs'),
   json;
-var connection = require('../helpers/db');
+const connection = require('../helpers/db');
 const { exit } = require('process');
 require('dotenv').config();
 
