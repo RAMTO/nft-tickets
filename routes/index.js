@@ -4,7 +4,7 @@ var router = express.Router();
 var ethers = require('ethers');
 var fs = require('fs'),
   json;
-var mysql = require('mysql2');
+var connection = require('../helpers/db');
 const { exit } = require('process');
 require('dotenv').config();
 
@@ -13,30 +13,9 @@ const typeMapping = {
   vip: 2,
 };
 
-function connectMySQL() {
-  const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    password: process.env.DB_PASSWORD,
-  });
-
-  connection.connect(function (err) {
-    if (err) {
-      return console.error('error: ' + err.message);
-    }
-
-    console.log('Connected to the MySQL server.');
-  });
-
-  return connection;
-}
-
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   const { id: ticketId } = req.query;
-  const connection = connectMySQL();
 
   const query = `SELECT * FROM tickets AS t WHERE t.uuid = '${req.query.id}'`;
 
