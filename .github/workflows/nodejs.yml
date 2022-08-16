@@ -41,4 +41,4 @@ jobs:
           cd /home/crypto/nft-tickets
           git pull origin main
           npm install --production
-          pm2 restart nft-app
+          pm2 restart nft
