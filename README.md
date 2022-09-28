@@ -16,5 +16,4 @@ yarn start
 
 Open new tab on `http://localhost:3000/?id=<TICKET_ID>`
 
-
 ## 🚀 Github action CI/CD
