@@ -1,6 +1,6 @@
 # 🎫 NFT Tickets System
 
-Project requires `Node.js` version `12.22.9`
+Project requires `Node.js` version `12.22.9`.
 
 ## 🏗 Installation
 
