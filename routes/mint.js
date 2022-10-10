@@ -40,16 +40,14 @@ async function mintNFT(ticketType, req) {
     process.env.CONTRACT_ADDRESS,
   );
 
-  console.log('contract', contract);
-
   const { bcadr: addressTo } = req.cookies;
-
-  console.log('addressTo', addressTo);
 
   try {
     const tx = await contract.mintNFT(addressTo, ticketType, {
       gasPrice: 600000000000,
     });
+
+    console.log('tx', tx);
 
     console.log('Minting...');
     await tx.wait();
